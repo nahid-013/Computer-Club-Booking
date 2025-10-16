@@ -5,8 +5,8 @@ class Computer(BaseModel):
     CPU: str
     RAM: str
     GPU: str
-
-class Headphones(BaseModel):
+    display: str
+class Headphone(BaseModel):
     model: str
 
 class Mouse(BaseModel):

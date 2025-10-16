@@ -1,7 +1,7 @@
 import asyncio
-from src.db.models import create_db
+from src.databases.models import create_db
 from sqlalchemy.ext.asyncio import async_sessionmaker
-from src.db.models import async_engine
+from src.databases.models import async_engine
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 async def main():
