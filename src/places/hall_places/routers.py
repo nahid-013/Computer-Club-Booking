@@ -2,6 +2,7 @@ from fastapi import APIRouter, status, Depends
 from src.places.hall_places.schemas import Place, UpdatePlace
 from src.databases.services.place_services import PlaceServices
 from src.databases.main import get_session
+from datetime import datetime, timedelta
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from typing import List
 
@@ -43,5 +44,23 @@ async def deletePlace(place_id: int, session: AsyncSession = Depends(get_session
         await place_services.delete_place(session, place_id)
         return {place_id: "deleted"}
     raise status.HTTP_404_NOT_FOUND
+
+
+@place_router.post("/book_place/{place_id}")
+async def book_place(place_id: int, session: AsyncSession = Depends(get_session)):
+    print('3424')
+    place = await place_services.get_place(session, place_id)
+
+    if not place:
+        raise status.HTTP_404_NOT_FOUND
+    if not place.free:
+        print('not free')
+        raise status.HTTP_404_NOT_FOUND
+
+    place.free = False
+    place.booked_until = datetime.utcnow() + timedelta(minutes=1)
+
+    await session.commit()
+    return {"message": f"Place {place_id} booked for 2 hours"}
 
 

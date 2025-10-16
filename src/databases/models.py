@@ -1,7 +1,8 @@
-from sqlalchemy import func, ForeignKey
+from sqlalchemy import func, ForeignKey, DateTime
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncAttrs
 from src.databases.config import Config
+from typing import Optional
 import datetime
 class Base(AsyncAttrs, DeclarativeBase):
     pass
@@ -20,6 +21,7 @@ class Place(Base):
     headphone: Mapped["Headphone"] = relationship(back_populates="place")
     mouse: Mapped["Mouse"] = relationship(back_populates="place")
     created_at: Mapped[datetime.datetime] = mapped_column(server_default=func.now())
+    booked_until: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
 class Computer(Base):
     __tablename__ = 'computers_table'
