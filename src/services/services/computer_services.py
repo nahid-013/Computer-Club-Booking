@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy import select
-from src.databases.models import Computer
+from src.db.models import Computer
 class ComputerServices:
     async def get_all_computers(self, session: AsyncSession):
         places = await session.scalars(select(Computer))

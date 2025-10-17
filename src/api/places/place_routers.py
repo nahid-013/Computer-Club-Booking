@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Depends
-from src.places.hall_places.schemas import Place, UpdatePlace
-from src.databases.services.place_services import PlaceServices
-from src.databases.main import get_session
+from src.schemas.schemas import Place, UpdatePlace
+from src.services.services.place_services import PlaceServices
+from src.db.session import get_session
 from datetime import datetime, timedelta
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from typing import List
@@ -48,7 +48,6 @@ async def deletePlace(place_id: int, session: AsyncSession = Depends(get_session
 
 @place_router.post("/book_place/{place_id}")
 async def book_place(place_id: int, session: AsyncSession = Depends(get_session)):
-    print('3424')
     place = await place_services.get_place(session, place_id)
 
     if not place:

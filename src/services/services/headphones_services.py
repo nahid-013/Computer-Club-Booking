@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy import select
-from src.databases.models import Headphone
+from src.db.models import Headphone
 class HeadphoneServices:
     async def get_all_headphones(self, session: AsyncSession):
         headphones = await session.scalars(select(Headphone))

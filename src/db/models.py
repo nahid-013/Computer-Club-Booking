@@ -1,7 +1,6 @@
 from sqlalchemy import func, ForeignKey, DateTime
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncAttrs
-from src.databases.config import Config
+from sqlalchemy.ext.asyncio import AsyncAttrs
 from typing import Optional
 import datetime
 class Base(AsyncAttrs, DeclarativeBase):
@@ -51,9 +50,3 @@ class Mouse(Base):
     place: Mapped["Place"] = relationship(back_populates="mouse")
     # place_id: Mapped[int] = mapped_column(ForeignKey('places_table.id'), unique=True)
 
-
-async_engine = create_async_engine(Config.database_url, echo=True)
-
-async def create_db():
-    async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)

@@ -2,17 +2,14 @@ import asyncio
 from datetime import datetime
 from fastapi import APIRouter
 from sqlalchemy.future import select
-from src.databases.models import Place
-from src.databases.main import get_session  # ← твой get_session из вопроса
+from src.db.models import Place
+from src.db.session import get_session  # ← твой get_session из вопроса
 
 timer = APIRouter()
 
 async def release_expired_places():
     while True:
-        # 🔽 Получаем генератор
         session_gen = get_session()
-
-        # 🔽 Извлекаем сессию через anext()
         session = await anext(session_gen)
 
         try:

@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy import select
-from src.databases.models import Place
+from src.db.models import Place
 class PlaceServices:
     async def get_all_places(self, session: AsyncSession):
         places = await session.scalars(select(Place))

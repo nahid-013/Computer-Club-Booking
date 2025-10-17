@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Depends
-from src.places.hall_places.schemas import Headphone
-from src.databases.services.headphones_services import HeadphoneServices
-from src.databases.main import get_session
+from src.schemas.schemas import Headphone
+from src.services.services.headphones_services import HeadphoneServices
+from src.db.session import get_session
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from typing import List
 

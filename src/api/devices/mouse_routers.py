@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Depends
-from src.places.hall_places.schemas import Mouse
-from src.databases.services.mouse_services import MouseServices
-from src.databases.main import get_session
+from src.schemas.schemas import Mouse
+from src.services.services.mouse_services import MouseServices
+from src.db.session import get_session
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from typing import List
 

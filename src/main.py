@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from src.places.hall_places.routers import place_router
-from src.devices.computer_routers import computer_router
-from src.devices.headphone_routers import headphone_router
-from src.devices.mouse_routers import mouse_router
-from src.databases.services.place_booking import timer
+from src.api.places.place_routers import place_router
+from src.api.devices.computer_routers import computer_router
+from src.api.devices.headphone_routers import headphone_router
+from src.api.devices.mouse_routers import mouse_router
+from src.core.place_booking import timer
 import uvicorn
 
 

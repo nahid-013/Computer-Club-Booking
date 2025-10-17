@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Depends
-from src.places.hall_places.schemas import Computer
-from src.databases.services.computer_services import ComputerServices
-from src.databases.main import get_session
+from src.schemas.schemas import Computer
+from src.services.services.computer_services import ComputerServices
+from src.db.session import get_session
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from typing import List
 

@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy import select
-from src.databases.models import Mouse
+from src.db.models import Mouse
 class MouseServices:
     async def get_all_mouses(self, session: AsyncSession):
         mouses = await session.scalars(select(Mouse))
