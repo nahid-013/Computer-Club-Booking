@@ -1,18 +1,15 @@
-import asyncio
-from datetime import datetime
 from fastapi import APIRouter
 from sqlalchemy.future import select
+from src.db.session import async_session
 from src.db.models import Place
-from src.db.session import get_session  # ← твой get_session из вопроса
+import asyncio
+from datetime import datetime
 
 timer = APIRouter()
 
 async def release_expired_places():
     while True:
-        session_gen = get_session()
-        session = await anext(session_gen)
-
-        try:
+        async with async_session() as session:
             now = datetime.utcnow()
 
             result = await session.scalars(
@@ -28,9 +25,6 @@ async def release_expired_places():
                 place.booked_until = None
 
             await session.commit()
-
-        finally:
-            await session.close()
 
         await asyncio.sleep(60)
 

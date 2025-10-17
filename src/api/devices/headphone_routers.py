@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from src.schemas.schemas import Headphone
 from src.services.services.headphones_services import HeadphoneServices
 from src.db.session import get_session
@@ -10,14 +10,14 @@ headphone_router = APIRouter(prefix='/devices/headphones')
 headphone_services = HeadphoneServices()
 @headphone_router.get("/", response_model=List[Headphone])
 async def getAllHeadphone(session: AsyncSession = Depends(get_session)):
-    places = await headphone_services.get_all_headphones(session)
-    return places
+    headphones = await headphone_services.get_all_headphones(session)
+    return headphones
 @headphone_router.get("/{headphone_id}", response_model=Headphone)
 async def getHeadphone(headphone_id: int, session: AsyncSession = Depends(get_session)):
-    place = await headphone_services.get_headphone(session, headphone_id)
-    if place is not None:
-        return place
-    raise status.HTTP_404_NOT_FOUND
+    headphone = await headphone_services.get_headphone(session, headphone_id)
+    if headphone is not None:
+        return headphone
+    raise HTTPException(status_code=404, detail="Headphone not found")
 
 @headphone_router.post("/", response_model=List[Headphone])
 async def addHeadphone(headphones: List[Headphone], session: AsyncSession = Depends(get_session)):
@@ -29,5 +29,5 @@ async def deleteHeadphone(headphone_id: int, session: AsyncSession = Depends(get
     headphone = await headphone_services.get_headphone(session, headphone_id)
     if headphone is not None:
         await headphone_services.delete_headphone(session, headphone_id)
-        return {headphone_id: "deleted"}
-    raise status.HTTP_404_NOT_FOUND
+        return {"message": f"Headphone {headphone_id} deleted"}
+    raise HTTPException(status_code=404, detail="Headphone not found")

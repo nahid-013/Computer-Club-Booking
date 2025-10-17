@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from src.schemas.schemas import Mouse
 from src.services.services.mouse_services import MouseServices
 from src.db.session import get_session
@@ -17,7 +17,7 @@ async def getMouse(mouse_id: int, session: AsyncSession = Depends(get_session)):
     mouse = await mouse_services.get_mouse(session, mouse_id)
     if mouse is not None:
         return mouse
-    raise status.HTTP_404_NOT_FOUND
+    raise HTTPException(status_code=404, detail="Mouse not found")
 
 @mouse_router.post("/", response_model=List[Mouse])
 async def addMouse(mouses: List[Mouse], session: AsyncSession = Depends(get_session)):
@@ -29,5 +29,5 @@ async def deleteMouse(mouse_id: int, session: AsyncSession = Depends(get_session
     mouse = await mouse_services.get_mouse(session, mouse_id)
     if mouse is not None:
         await mouse_services.delete_mouse(session, mouse_id)
-        return {mouse_id: "deleted"}
-    raise status.HTTP_404_NOT_FOUND
+        return {"message": f"Mouse {mouse_id} deleted"}
+    raise HTTPException(status_code=404, detail="Mouse not found")

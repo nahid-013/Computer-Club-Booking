@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, HTTPException, Depends
 from src.schemas.schemas import Place, UpdatePlace
 from src.services.services.place_services import PlaceServices
 from src.db.session import get_session
@@ -18,7 +18,7 @@ async def getPlace(place_id: int, session: AsyncSession = Depends(get_session)):
     place = await place_services.get_place(session, place_id)
     if place is not None:
         return place
-    raise status.HTTP_404_NOT_FOUND
+    raise HTTPException(status_code=404, detail="Place not found")
 
 @place_router.post("/", response_model=list[Place])
 async def addPlace(places: List[Place], session: AsyncSession = Depends(get_session)):
@@ -35,31 +35,29 @@ async def updatePlace(place_id: int, update_place: UpdatePlace, session: AsyncSe
             computer_id=update_place.computer_id,headphones_id=update_place.headphones_id,
             mouse_id=update_place.mouse_id, free=update_place.free, ready=update_place.ready)
         return update_place
-    raise status.HTTP_404_NOT_FOUND
+    raise HTTPException(status_code=404, detail="Place not found")
 
 @place_router.delete("/{place_id}")
 async def deletePlace(place_id: int, session: AsyncSession = Depends(get_session)):
     place = await place_services.get_place(session, place_id)
     if place is not None:
         await place_services.delete_place(session, place_id)
-        return {place_id: "deleted"}
-    raise status.HTTP_404_NOT_FOUND
+        return {"message": f"Place {place_id} deleted"}
+    raise HTTPException(status_code=404, detail="Place not found")
 
-
-@place_router.post("/book_place/{place_id}")
-async def book_place(place_id: int, session: AsyncSession = Depends(get_session)):
+@place_router.post("/book/{place_id}")
+async def book_place(place_id: int, hours: int, session: AsyncSession = Depends(get_session)):
     place = await place_services.get_place(session, place_id)
 
     if not place:
-        raise status.HTTP_404_NOT_FOUND
+        raise HTTPException(status_code=404, detail="Place not found")
     if not place.free:
-        print('not free')
-        raise status.HTTP_404_NOT_FOUND
+        raise HTTPException(status_code=404, detail="Place not free")
 
     place.free = False
-    place.booked_until = datetime.utcnow() + timedelta(minutes=1)
+    place.booked_until = datetime.utcnow() + timedelta(hours=hours)
 
     await session.commit()
-    return {"message": f"Place {place_id} booked for 2 hours"}
+    return {"message": f"Place {place_id} booked for {hours} hours"}
 
 
